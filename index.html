@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>try{var t=localStorage.getItem("theme");if(t)document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
 <style>
 :root{
   --bg:#ECECEF; --bg-grad1:#E9E3F1; --bg-grad2:#F3D3E6;
@@ -63,6 +64,10 @@ button{font:inherit; color:inherit; border:0; background:none; cursor:pointer}
 .who b{display:block; font-weight:600; font-size:15px}
 .who span{font-size:13px; color:var(--ink-3)}
 
+.themebtn{display:inline-flex; align-items:center; gap:8px; padding:14px 16px; background:var(--surface); color:var(--ink); font-size:14px; font-weight:500; transition:background .15s}
+.themebtn:hover{background:var(--surface-2)}
+.themebtn .i-sun,.themebtn .i-moon{display:none}
+.themebtn.to-light .i-sun,.themebtn.to-dark .i-moon{display:inline-flex}
 /* stats */
 .stats{display:grid; grid-template-columns:repeat(4,1fr); gap:24px; margin:44px 0 40px}
 .stat .l1{font-weight:700; font-size:17px}
@@ -337,6 +342,7 @@ dialog::backdrop{background:rgba(20,20,22,.45); backdrop-filter:blur(2px)}
       <button class="tab" role="tab" aria-selected="false" data-tab="problems">Проблемы</button>
       <button class="tab" role="tab" aria-selected="false" data-tab="outside">За рамками дизайна</button>
     </div>
+    <button class="themebtn" id="themeBtn" aria-label="Переключить тему"><span class="i-sun"><svg class="lu" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></span><span class="i-moon"><svg class="lu" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg></span><span class="tlbl"></span></button>
   </div>
 
   <div class="stats">
@@ -898,6 +904,13 @@ $('dodCopy').onclick = e=>{
 };
 $('dodModal').addEventListener('click', e=>{ if(e.target===$('dodModal') || e.target.closest('[data-close]')) $('dodModal').close(); });
 $('revDod').onclick = ()=>openDod(rv.type==='small'?'A1':'A');
+
+/* theme switch */
+const isDark = ()=>{ const t=document.documentElement.getAttribute('data-theme'); return t ? t==='dark' : matchMedia('(prefers-color-scheme: dark)').matches; };
+function paintThemeBtn(){ const d=isDark(), b=$('themeBtn'); b.classList.toggle('to-light', d); b.classList.toggle('to-dark', !d); b.querySelector('.tlbl').textContent = d ? 'Светлая тема' : 'Тёмная тема'; }
+$('themeBtn').onclick = ()=>{ const next = isDark() ? 'light' : 'dark'; document.documentElement.setAttribute('data-theme', next); try{ localStorage.setItem('theme', next); }catch(e){} paintThemeBtn(); };
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', paintThemeBtn);
+paintThemeBtn();
 
 render(); renderRev(); typo(document.body);
 </script>

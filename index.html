@@ -106,7 +106,7 @@ button{font:inherit; color:inherit; border:0; background:none; cursor:pointer}
 .lines .ln.dim{background:rgba(20,20,22,.15)} .lines .ln.dim::before,.lines .ln.dim::after{background:rgba(20,20,22,.2)}
 .lines-cap{display:flex; justify-content:space-between; font-size:12px; color:rgba(20,20,22,.5); margin-top:10px}
 
-.pinkc{background:linear-gradient(135deg,var(--pink-soft) 0%, var(--surface-2) 45%, var(--pink-soft) 100%); padding:28px 32px; position:relative}
+.pinkc{background:linear-gradient(135deg,var(--pink-soft) 0%, var(--surface-2) 45%, var(--pink-soft) 100%); padding:28px 32px 104px; position:relative}
 .cols{display:grid; grid-template-columns:repeat(2,1fr); gap:28px 36px; margin-top:28px}
 .blk h3{margin:0 0 10px; font-size:17px; font-weight:600}
 .blk .track{display:flex; align-items:center; gap:0; margin-bottom:10px}
@@ -130,7 +130,7 @@ button{font:inherit; color:inherit; border:0; background:none; cursor:pointer}
 :root[data-theme="dark"] .pain{background:rgba(0,0,0,.2)}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .pain{background:rgba(0,0,0,.2)}}
 .pain h3{color:var(--red)}
-.nav{display:flex; justify-content:flex-end; gap:4px; margin-top:24px}
+.nav{position:absolute; right:28px; bottom:28px; display:flex; gap:4px}
 .nav button{width:52px; height:52px; background:var(--black); color:var(--on-black); display:grid; place-items:center}
 .nav button:disabled{opacity:.3; cursor:default}
 
@@ -793,6 +793,21 @@ function typo(root){
 }
 const _render = render, _renderRev = renderRev;
 render = function(){ _render(); typo(document.getElementById('stages')); };
+/* фиксированная высота карточки этапа: по самому длинному этапу */
+function fixSplitHeight(){
+  const sp = document.querySelector('.split');
+  sp.style.height = '';
+  if (innerWidth <= 900) return;
+  const keep = {type:st.type, stage:st.stage}; let max = 0;
+  for (const t of ['A','B2']) {
+    st.type = t;
+    stages().forEach((_,i)=>{ st.stage = i; render(); max = Math.max(max, sp.offsetHeight); });
+  }
+  st.type = keep.type; st.stage = keep.stage; render();
+  sp.style.height = max + 'px';
+}
+let _fsT; addEventListener('resize', ()=>{ clearTimeout(_fsT); _fsT = setTimeout(fixSplitHeight, 150); });
+(document.fonts ? document.fonts.ready : Promise.resolve()).then(fixSplitHeight);
 renderRev = function(){ _renderRev(); typo(document.getElementById('review')); };
 
 /* ---------- DoD AdTech ---------- */

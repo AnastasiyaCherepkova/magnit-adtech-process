@@ -1,0 +1,905 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Дизайн-процесс AdTech</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ECECEF; --bg-grad1:#E9E3F1; --bg-grad2:#F3D3E6;
+  --surface:#F6F6F8; --surface-2:#FFFFFF; --line:#E1E1E6;
+  --ink:#141416; --ink-2:#55555E; --ink-3:#9A9AA4;
+  --yellow:#FFEF5C; --yellow-2:#FFF6A6; --pink:#F7A8DA; --pink-soft:#FBE1EF;
+  --red:#F2453D; --black:#18181B; --on-black:#FFFFFF;
+  --crimson:#D2245A; --olive:#CFC64A; --mark:#FFF27A;
+  --pill-text:var(--crimson); --art-text:var(--crimson);
+  --shadow:0 1px 0 rgba(0,0,0,.03), 0 12px 32px -18px rgba(40,20,60,.25);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#16161A; --bg-grad1:#1E1A26; --bg-grad2:#2A1A26;
+    --surface:#202026; --surface-2:#26262D; --line:#33333C;
+    --ink:#F4F4F6; --ink-2:#B9B9C3; --ink-3:#7C7C88;
+    --yellow:#E8D63E; --yellow-2:#4A4420; --pink:#C2649F; --pink-soft:#3A2432;
+    --red:#FF6A60; --black:#F4F4F6; --on-black:#141416;
+    --crimson:#C96A8A; --olive:#7C7740; --mark:#5A5426;
+    --pill-text:#ECE7EA; --art-text:#9A949E;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#16161A; --bg-grad1:#1E1A26; --bg-grad2:#2A1A26;
+  --surface:#202026; --surface-2:#26262D; --line:#33333C;
+  --ink:#F4F4F6; --ink-2:#B9B9C3; --ink-3:#7C7C88;
+  --yellow:#E8D63E; --yellow-2:#4A4420; --pink:#C2649F; --pink-soft:#3A2432;
+  --red:#FF6A60; --black:#F4F4F6; --on-black:#141416;
+    --crimson:#C96A8A; --olive:#7C7740; --mark:#5A5426;
+    --pill-text:#ECE7EA; --art-text:#9A949E;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  font-family:Geologica,system-ui,sans-serif; color:var(--ink);
+  background:var(--bg);
+  background-image:radial-gradient(1200px 700px at 100% 0%, var(--bg-grad1), transparent 60%),
+                   radial-gradient(900px 700px at 100% 100%, var(--bg-grad2), transparent 60%);
+  background-attachment:fixed; min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px; margin:0 auto; padding:28px 24px 64px}
+button{font:inherit; color:inherit; border:0; background:none; cursor:pointer}
+
+/* header */
+.top{display:flex; gap:16px; align-items:flex-start; justify-content:space-between; flex-wrap:wrap}
+.tabs{display:flex; gap:4px; flex-wrap:wrap}
+.tab{padding:14px 22px; background:var(--surface); font-weight:500; font-size:15px; color:var(--ink-2); transition:.15s}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{background:var(--surface-2); color:var(--ink); font-weight:600; box-shadow:var(--shadow)}
+.who{display:flex; align-items:stretch; box-shadow:var(--shadow)}
+.who .mark{width:56px; background:var(--yellow); display:grid; place-items:center; font-weight:800; font-size:18px; color:#141416}
+.who .txt{background:var(--surface-2); padding:10px 18px}
+.who b{display:block; font-weight:600; font-size:15px}
+.who span{font-size:13px; color:var(--ink-3)}
+
+/* stats */
+.stats{display:grid; grid-template-columns:repeat(4,1fr); gap:24px; margin:44px 0 40px}
+.stat .l1{font-weight:700; font-size:17px}
+.stat .l2{font-weight:600; font-size:17px; color:var(--ink-3)}
+.stat .num{font-weight:700; font-size:64px; letter-spacing:-.03em; line-height:1; margin-top:18px}
+
+/* chips */
+.bar{display:flex; justify-content:space-between; gap:16px; flex-wrap:wrap; align-items:center; margin-bottom:12px}
+.chips{display:flex; gap:4px; flex-wrap:wrap}
+.chip{display:inline-flex; align-items:center; gap:8px; padding:12px 16px; background:var(--surface); font-weight:500; font-size:14px; transition:.15s}
+
+.chip:hover{background:var(--surface-2)}
+.chip[aria-pressed="true"]{background:var(--pink); color:#141416}
+.chip.dark{background:var(--black); color:var(--on-black)}
+.seg{display:flex; background:var(--surface); padding:4px; gap:2px}
+.seg button{padding:9px 14px; font-size:14px; font-weight:600; color:var(--ink-2)}
+.seg button[aria-pressed="true"]{background:var(--surface-2); color:var(--ink); box-shadow:var(--shadow)}
+.hint{font-size:14px; line-height:1.55; color:var(--ink-2); margin:0 0 18px; max-width:780px}
+
+/* main split */
+.split{display:grid; grid-template-columns:5fr 9fr; box-shadow:var(--shadow)}
+.yellow{background:var(--yellow); color:#141416; padding:28px; display:flex; flex-direction:column; gap:20px; min-height:440px}
+.yellow h2,.pinkc h2{margin:0; font-size:26px; font-weight:700; line-height:1.15}
+.yellow h2 small,.pinkc h2 small{display:block; color:rgba(20,20,22,.45); font-weight:600}
+.pinkc h2 small{color:var(--ink-3)}
+.bignum{font-size:96px; font-weight:800; letter-spacing:-.05em; line-height:.9}
+.lead{font-size:14px; color:rgba(20,20,22,.6)}
+.lead b{color:#141416; font-weight:700; font-size:16px; display:block; margin-top:4px}
+.roles{display:flex; flex-wrap:wrap; gap:6px}
+.role{font-size:12px; font-weight:600; padding:6px 10px; background:rgba(255,255,255,.55)}
+.role.on{background:#141416; color:#fff}
+.lines{display:flex; justify-content:space-between; align-items:flex-end; height:110px; margin-top:auto; padding:0 4px}
+.lines .ln{position:relative; width:2px; background:var(--red); border-radius:2px}
+.lines .ln::before,.lines .ln::after{content:""; position:absolute; left:50%; width:9px; height:9px; margin-left:-4.5px; border-radius:50%; background:var(--red)}
+.lines .ln::before{top:-4px} .lines .ln::after{bottom:-4px}
+.lines .ln.dim{background:rgba(20,20,22,.15)} .lines .ln.dim::before,.lines .ln.dim::after{background:rgba(20,20,22,.2)}
+.lines-cap{display:flex; justify-content:space-between; font-size:12px; color:rgba(20,20,22,.5); margin-top:10px}
+
+.pinkc{background:linear-gradient(135deg,var(--pink-soft) 0%, var(--surface-2) 45%, var(--pink-soft) 100%); padding:28px 32px; position:relative}
+.cols{display:grid; grid-template-columns:repeat(2,1fr); gap:28px 36px; margin-top:28px}
+.blk h3{margin:0 0 10px; font-size:17px; font-weight:600}
+.blk .track{display:flex; align-items:center; gap:0; margin-bottom:10px}
+.blk .track i{display:block; height:2px; background:var(--ink)}
+.blk .track em{width:8px; height:8px; border-radius:50%; background:var(--red); flex:none}
+.blk .track s{flex:1; border-top:2px dotted var(--ink-3); opacity:.6}
+.blk p,.blk li{font-size:14px; line-height:1.5; color:var(--ink-2); margin:0}
+.blk ul{margin:0; padding:0; list-style:none}
+.blk li{position:relative; padding-left:16px}
+.blk li::before{content:""; position:absolute; left:0; top:.6em; width:7px; height:7px; border-radius:50%; background:var(--crimson)}
+.blk li{margin:2px 0}
+.blk .tag{display:inline-flex; gap:6px; align-items:center; font-size:13px; color:var(--ink-3); margin-top:6px}
+.blk .tag::before{content:""; border:5px solid transparent; border-left:7px solid var(--red); border-right:0}
+.rule{grid-column:1/-1; padding:18px 20px; background:var(--surface-2); border-left:3px solid var(--yellow); box-shadow:var(--shadow)}
+.rule .rlbl{display:inline-flex; align-items:center; gap:8px; font-size:13px; font-weight:700; color:var(--ink)}
+.rule .rlbl svg{color:var(--olive)}
+.rule p{margin:8px 0 0; font-size:17px; line-height:1.45; font-weight:500; color:var(--ink)}
+.rule .tag{display:inline-flex; gap:6px; align-items:center; font-size:13px; color:var(--ink-3); margin-top:10px}
+.rule .tag::before{content:""; border:5px solid transparent; border-left:7px solid var(--red); border-right:0}
+.pain{grid-column:1/-1; background:rgba(255,255,255,.5); padding:16px 18px; border-left:3px solid var(--red)}
+:root[data-theme="dark"] .pain{background:rgba(0,0,0,.2)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .pain{background:rgba(0,0,0,.2)}}
+.pain h3{color:var(--red)}
+.nav{display:flex; justify-content:flex-end; gap:4px; margin-top:24px}
+.nav button{width:52px; height:52px; background:var(--black); color:var(--on-black); display:grid; place-items:center}
+.nav button:disabled{opacity:.3; cursor:default}
+
+/* stage flow (как схема процесса в книге) */
+.flowbox{margin:0 0 4px; padding:28px 16px 22px; background:var(--surface-2); box-shadow:var(--shadow)}
+.flow{display:grid; grid-template-columns:repeat(5,1fr); row-gap:28px; align-items:start}
+.node{min-width:0; position:relative; display:flex; flex-direction:column; align-items:stretch; gap:10px; padding:0 6px}
+.node::before{content:""; position:absolute; top:25px; left:0; right:0; height:2px; background:var(--olive)}
+.node:first-child::before{left:50%} .node:last-child::before{right:50%}
+.flow.c5 .node:nth-child(5n+1)::before{left:50%} .flow.c5 .node:nth-child(5n)::before{right:50%}
+.loopnote{display:flex; align-items:center; gap:8px; margin:22px 6px 0; padding-top:16px; border-top:1px solid var(--line); font-size:13px; color:var(--ink-2)}
+.loopnote svg{color:var(--olive)}
+.loopnote:empty{display:none}
+.pillx{position:relative; z-index:1; display:flex; align-items:center; width:100%; height:52px; padding:0 14px; border-radius:26px; border:1.5px solid var(--crimson); background:var(--surface-2); color:var(--pill-text); font-size:12.5px; font-weight:600; line-height:1.2; text-align:left; transition:background .15s}
+.pillx .no{opacity:.6; margin-right:6px; font-variant-numeric:tabular-nums}
+.pillx:hover{background:var(--pink-soft)}
+.pillx[aria-current="true"]{background:var(--crimson); color:#fff}
+.node.dim{opacity:.3}
+.node.hl .pillx:not([aria-current="true"]){background:var(--pink-soft)}
+.art{padding:0 14px; font-size:11.5px; line-height:1.35; color:var(--art-text); text-align:left}
+
+/* book accents */
+mark{background:linear-gradient(transparent 38%, var(--mark) 38%, var(--mark) 90%, transparent 90%); color:inherit; padding:0 2px}
+.sec{margin:0 0 8px; font-size:28px; font-weight:700; letter-spacing:-.01em; color:var(--crimson)}
+.shape{display:inline-block; width:10px; height:10px; flex:none}
+.shape.c{border-radius:50%} .shape.d{transform:rotate(45deg) scale(.85)} .shape.t{clip-path:polygon(50% 0,100% 100%,0 100%)}
+
+/* generic cards */
+.section{display:none}
+.section.on{display:block}
+.grid{display:grid; gap:4px; grid-template-columns:repeat(auto-fill,minmax(320px,1fr))}
+.card{background:var(--surface-2); padding:24px; box-shadow:var(--shadow)}
+.card h3{margin:0 0 4px; font-size:20px; font-weight:700}
+.card .sub{color:var(--ink-3); font-weight:600; margin-bottom:18px}
+.card dl{margin:0; display:grid; gap:12px}
+.card dt{justify-self:start; font-size:12px; font-weight:700;  color:var(--ink); background:linear-gradient(transparent 22%, var(--mark) 22%, var(--mark) 88%, transparent 88%); padding:0 4px}
+.card dd{margin:4px 0 0; font-size:14px; line-height:1.5; color:var(--ink-2)}
+.card.y{background:var(--yellow); color:#141416}
+.card.y .sub{color:rgba(20,20,22,.5)} .card.y dd{color:rgba(20,20,22,.8)}
+.card.p{background:linear-gradient(135deg,var(--pink-soft),var(--surface-2))}
+.give{display:grid; grid-template-columns:1fr 1fr; gap:4px; margin-bottom:16px}
+.give div{background:var(--surface); padding:12px 14px; font-size:14px; line-height:1.45; color:var(--ink-2)}
+.give b{display:block; font-size:12px;  color:var(--ink-3); margin-bottom:6px}
+.card.p .give div{background:rgba(255,255,255,.6)}
+:root[data-theme="dark"] .card.p .give div{background:rgba(0,0,0,.2)}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .card.p .give div{background:rgba(0,0,0,.2)}}
+
+/* seams */
+.seams{display:grid; gap:4px; grid-template-columns:repeat(auto-fill,minmax(320px,1fr))}
+.seam{display:grid; grid-template-rows:subgrid; grid-row:span 7; row-gap:0; background:var(--surface-2); box-shadow:var(--shadow)}
+.seam h3{margin:0; padding:22px 22px 2px; font-size:19px; font-weight:700}
+.seam .sub{padding:0 22px 16px; color:var(--ink-3); font-size:14px; font-weight:500}
+.seam .f{padding:12px 22px; border-top:1px solid var(--line)}
+.seam .f span{display:block; font-size:12px; font-weight:600; color:var(--ink-3); margin-bottom:4px}
+.seam .f p{margin:0; font-size:14px; line-height:1.45; color:var(--ink)}
+
+/* review */
+.rev{display:grid; grid-template-columns:5fr 9fr; gap:4px}
+.q{display:grid; gap:18px; align-content:start}
+.seg button{white-space:nowrap}
+.seg{flex-wrap:wrap}
+.q label.title{font-weight:700; font-size:15px; display:block; margin-bottom:8px}
+.tog{display:flex; justify-content:space-between; align-items:center; gap:12px; padding:12px 0; border-top:1px solid rgba(20,20,22,.12); font-size:14px; font-weight:500}
+.sw{width:46px; height:26px; background:rgba(20,20,22,.18); position:relative; flex:none; transition:.15s}
+.sw::after{content:""; position:absolute; top:3px; left:3px; width:20px; height:20px; background:#fff; transition:.15s}
+.sw[aria-checked="true"]{background:#141416}
+.sw[aria-checked="true"]::after{left:23px}
+.card.y .seg{background:rgba(255,255,255,.5)}
+#revType{display:grid; grid-template-columns:repeat(3,1fr)}
+#revType button{text-align:center}
+.card.y .seg button{color:rgba(20,20,22,.6)}
+.card.y .seg button[aria-pressed="true"]{background:#fff; color:#141416}
+.rlist{display:grid; gap:4px}
+.ritem{display:grid; grid-template-columns:28px 1fr; gap:14px; padding:16px 18px; background:var(--surface); align-items:start; transition:.2s}
+.ritem .ck{width:28px; height:28px; display:grid; place-items:center; background:var(--black); color:var(--on-black)}
+.ritem.off{opacity:.38}
+.ritem.off .ck{background:transparent; border:2px solid var(--ink-3); color:transparent}
+.ritem b{font-weight:600; font-size:15px}
+.ritem p{margin:2px 0 0; font-size:13px; color:var(--ink-2); line-height:1.45}
+.ritem .why{display:inline-block; margin-top:6px; font-size:12px; font-weight:600; color:var(--red)}
+.ritem.off .why{color:var(--ink-3)}
+
+/* problems */
+.plist{display:grid; gap:4px; grid-template-columns:repeat(auto-fill,minmax(320px,1fr))}
+.prob{display:grid; grid-template-rows:subgrid; grid-row:span 3; row-gap:0; background:var(--surface-2); box-shadow:var(--shadow)}
+.prob .ph{display:flex; gap:12px; align-items:baseline; padding:22px 22px 8px}
+.prob .i{flex:none; width:28px; font-size:15px; font-weight:700; color:var(--crimson); font-variant-numeric:tabular-nums}
+.prob b{font-size:16px; font-weight:700; line-height:1.3}
+.prob p{margin:0; padding:0 22px 16px 62px; font-size:14px; color:var(--ink-2); line-height:1.5}
+.prob .fix{padding:12px 22px 16px 62px; border-top:1px solid var(--line); font-size:14px; line-height:1.45; color:var(--ink)}
+.prob .fix::before{content:"Решение"; display:block; font-size:12px; font-weight:600; color:var(--ink-3); margin-bottom:4px}
+.example{margin-top:4px; display:grid; grid-template-columns:1fr 1fr 1.4fr; gap:4px}
+.frame{background:var(--surface-2); padding:22px; display:flex; flex-direction:column; align-items:center; gap:12px; box-shadow:var(--shadow)}
+.frame .box{position:relative; background:#DCDCE2; display:flex; justify-content:center}
+.frame .box .sz{background:#BFD9C9; height:100%; border-left:1px dashed #6a9; border-right:1px dashed #6a9}
+.frame .cap{font-size:13px; text-align:center; color:var(--ink-2); line-height:1.4}
+.frame .cap b{display:block; font-size:18px; color:var(--ink)}
+
+/* outside */
+table{width:100%; border-collapse:collapse; border-top:3px solid var(--olive)}
+th,td{text-align:left; padding:16px 18px; font-size:14px; line-height:1.45; vertical-align:top; border-bottom:1px solid var(--line)}
+th{font-size:12px;  color:var(--ink-3); font-weight:700}
+td:first-child{font-weight:600; color:var(--ink)}
+td{color:var(--ink-2)}
+.pill{display:inline-block; padding:4px 10px; font-size:12px; font-weight:700; background:var(--pink); color:#141416; white-space:nowrap}
+.pill.y{background:var(--yellow)}
+.pill.g{background:var(--surface); color:var(--ink-2)}
+
+
+/* DoD AdTech */
+#dodModal{max-width:720px}
+#dodModal[open]{display:flex; flex-direction:column; max-height:92vh}
+#dodModal .mb{max-height:none; flex:1; min-height:0}
+.dctl{display:grid; gap:12px; padding:4px 24px 16px; border-bottom:1px solid var(--line)}
+.dtabs{display:flex; gap:4px; flex-wrap:wrap}
+.dtabs button{padding:10px 14px; font-size:14px; font-weight:600; background:var(--surface); color:var(--ink-2)}
+.dtabs button[aria-pressed="true"]{background:var(--ink); color:var(--surface-2)}
+.drow{display:flex; flex-direction:column; align-items:flex-start; gap:8px}
+.dtogs{display:flex; flex-wrap:wrap; gap:4px}
+.dt{display:inline-flex; align-items:center; gap:8px; padding:7px 10px; background:var(--surface); font-size:12.5px; text-align:left; font-weight:500; color:var(--ink-2)}
+.dt[aria-pressed="true"]{background:var(--pink); color:#141416}
+.dt .bx{width:14px; height:14px; border:1.5px solid currentColor; display:grid; place-items:center}
+.dt[aria-pressed="true"] .bx{background:#141416; border-color:#141416; color:var(--pink)}
+.dgroups{display:grid; gap:4px; padding:16px 0 4px}
+.dg{background:var(--surface); padding:16px 18px 6px}
+.dg h4{margin:0 0 6px; font-size:15px; font-weight:700}
+.di{display:flex; justify-content:space-between; align-items:flex-start; gap:16px; padding:10px 0; border-top:1px solid var(--line); font-size:14px; line-height:1.45; color:var(--ink); cursor:pointer}
+.di:first-of-type{border-top:0}
+.di small{display:block; color:var(--ink-3); font-size:12px; margin-top:2px}
+.di .req{color:var(--crimson); font-weight:700}
+.di .where{color:var(--ink-3)}
+.di input{appearance:none; -webkit-appearance:none; width:20px; height:20px; flex:none; margin:0; border:1.5px solid var(--ink-3); background:var(--surface-2); display:grid; place-items:center; cursor:pointer}
+.di input:checked{background:var(--ink); border-color:var(--ink)}
+.di input:checked::after{content:""; width:10px; height:6px; border:2px solid var(--surface-2); border-top:0; border-right:0; transform:rotate(-45deg) translate(1px,-1px)}
+.di.done span:first-child{color:var(--ink-3)}
+.dstatus{display:flex; justify-content:space-between; align-items:center; background:var(--surface); padding:16px 18px; font-size:14px}
+.dstatus b{font-size:15px}
+.spill{padding:4px 10px; font-size:12px; font-weight:600; border-radius:999px; background:var(--yellow); color:#141416}
+.spill.ok{background:#5E9B2E; color:#fff}
+.dprop{margin:16px 0 4px; background:var(--surface); border-left:3px solid var(--pink); padding:14px 16px}
+.dprop .lbl{display:inline-block; background:var(--pink); color:#141416; font-size:11px; font-weight:700; padding:4px 8px; margin-bottom:10px}
+.dprop p{margin:0 0 10px; font-size:13px; color:var(--ink-2); line-height:1.5}
+.dprop .di{cursor:default}
+
+/* info + modal */
+.lu{display:block; flex:none}
+.tplbtn{display:inline-flex; align-items:center; gap:8px; margin-top:14px; padding:10px 14px; background:var(--surface-2); color:var(--ink); font-size:13px; font-weight:600; box-shadow:var(--shadow); transition:background .15s}
+.tplbtn:hover{background:var(--surface)}
+.tplbtn svg{color:var(--crimson)}
+.info{position:relative; display:inline-flex; width:16px; height:16px; margin-left:2px; vertical-align:-3px; color:var(--crimson); transition:opacity .15s}
+.info::after{content:""; position:absolute; inset:-8px}
+.info:hover{opacity:.65}
+.btn{display:inline-flex; align-items:center; gap:8px}
+dialog{border:0; padding:0; max-width:640px; width:calc(100% - 32px); background:var(--surface-2); color:var(--ink); box-shadow:0 30px 80px -20px rgba(20,10,40,.45)}
+dialog::backdrop{background:rgba(20,20,22,.45); backdrop-filter:blur(2px)}
+.mh{display:flex; justify-content:space-between; align-items:flex-start; gap:16px; padding:24px 24px 8px}
+.mh h3{margin:0; font-size:22px; font-weight:700}
+.mh h3 small{display:block; font-size:15px; color:var(--ink-3); font-weight:500; margin-top:2px}
+.mx{width:40px; height:40px; background:var(--surface); display:grid; place-items:center; flex:none}
+.mb{padding:8px 24px 0; max-height:62vh; overflow:auto}
+.tpl{white-space:pre-wrap; font-size:14px; line-height:1.55; margin:0; font-family:inherit; color:var(--ink-2)}
+.tpl b{color:var(--ink); font-weight:700}
+.newblk{margin:16px 0 4px; background:var(--surface); border-left:3px solid var(--pink); padding:14px 16px}
+.newblk .lbl{display:inline-block; background:var(--pink); color:#141416; font-size:11px; font-weight:700;  padding:4px 8px; margin-bottom:10px}
+.newblk .lbl + span{font-size:12px; color:var(--ink-2); margin-left:8px}
+.mf{display:flex; gap:4px; justify-content:flex-end; padding:20px 24px 24px; flex-wrap:wrap}
+.btn{padding:14px 18px; font-weight:600; font-size:14px; background:var(--surface)}
+.btn.dark{background:var(--black); color:var(--on-black)}
+
+.foot{margin-top:40px; font-size:13px; color:var(--ink-3); line-height:1.6}
+
+@media (max-width:900px){
+  .wrap{padding:16px 16px 48px}
+  .stats{grid-template-columns:repeat(2,1fr); margin:28px 0}
+  .stat .num{font-size:44px}
+  .split,.rev,.example{grid-template-columns:1fr}
+  .yellow{min-height:auto}
+  .bignum{font-size:72px}
+  .cols{grid-template-columns:1fr; gap:20px}
+  .flowbox{padding:16px}
+  .flow{display:flex; flex-direction:column; row-gap:0}
+  .node{flex-direction:row; align-items:center; gap:12px; padding:5px 0}
+  .node::before{top:0; bottom:0; left:26px !important; right:auto !important; width:2px; height:auto}
+  .node:first-child::before{top:50%} .node:last-child::before{bottom:50%}
+  .pillx{width:190px; flex:none}
+  .art{padding:0}
+  .sec{font-size:24px}
+  .pinkc{padding:24px 20px}
+  .tab{padding:12px 14px; font-size:14px}
+  .give{grid-template-columns:1fr}
+  .grid,.plist{grid-template-columns:1fr}
+  table,thead,tbody,tr,th,td{display:block}
+  thead{display:none}
+  tr{border-bottom:4px solid var(--bg)}
+  td{border:0; padding:8px 16px}
+  td:first-child{padding-top:16px}
+  td:last-child{padding-bottom:16px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="top">
+    <div class="tabs" role="tablist">
+      <button class="tab" role="tab" aria-selected="true" data-tab="stages">Этапы</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="review">Ревью</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="seams">Стыки</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="problems">Проблемы</button>
+      <button class="tab" role="tab" aria-selected="false" data-tab="outside">За рамками дизайна</button>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="l1">Этапы</div><div class="l2">от задачи до запуска</div><div class="num">10</div></div>
+    <div class="stat"><div class="l1">Стыки</div><div class="l2">со смежниками</div><div class="num">5</div></div>
+    <div class="stat"><div class="l1">Ревью</div><div class="l2">по условиям</div><div class="num">7</div></div>
+    <div class="stat"><div class="l1">Типы</div><div class="l2">задач</div><div class="num">3</div></div>
+  </div>
+
+  <!-- STAGES -->
+  <section class="section on" id="stages">
+    <h2 class="sec">1. Этапы процесса</h2>
+    <div class="bar">
+      <div class="chips" id="roleChips"></div>
+      <div class="seg" id="typeSeg" aria-label="Тип задачи">
+        <button aria-pressed="true" data-type="A">A · Новый формат или доработка</button>
+        <button aria-pressed="false" data-type="B2">B · Команда берёт формат</button>
+      </div>
+    </div>
+    <p class="hint" id="stageHint">Нажмите на роль — подсветятся этапы, где она участвует. Нажмите на этап внизу — откроются детали.</p>
+
+    <div class="flowbox">
+      <div class="flow" id="strip"></div>
+      <p class="loopnote" id="loopNote"></p>
+    </div>
+    <div class="split">
+      <div class="yellow">
+        <h2 id="yTitle">Этап<small>кто ведёт</small></h2>
+        <div class="bignum" id="yNum">0</div>
+        <div class="lead">Ведёт<b id="yLead"></b></div>
+        <div class="roles" id="yRoles"></div>
+        <div>
+          <div class="lines" id="yLines"></div>
+          <div class="lines-cap"><span>Участие ролей</span><span id="yCount"></span></div>
+        </div>
+      </div>
+      <div class="pinkc">
+        <h2 id="pTitle">Задача<small>что на входе и на выходе</small></h2>
+        <div class="cols" id="pCols"></div>
+        <div class="nav">
+          <button id="prev" aria-label="Предыдущий этап"><svg class="lu" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg></button>
+          <button id="next" aria-label="Следующий этап"><svg class="lu" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- REVIEW -->
+  <section class="section" id="review">
+    <h2 class="sec">2. Ревью</h2>
+    <p class="hint">Ответьте на вопросы о задаче — справа останутся <mark>только нужные ревью</mark>. Ревьюерам показываю те пункты чек-листа AdTech, которые нужны по задаче.</p>
+    <div class="rev">
+      <div class="card y q">
+        <div>
+          <h3>Задача</h3>
+          <div class="sub">что делаем</div>
+          <div class="seg" id="revType">
+            <button aria-pressed="true" data-v="new">Новый формат</button>
+            <button aria-pressed="false" data-v="small">Доработка</button>
+            <button aria-pressed="false" data-v="guide">Гайд</button>
+          </div>
+        </div>
+        <div>
+          <div class="tog"><span>Новое место для формата</span><button class="sw" role="switch" aria-checked="false" data-k="embed" aria-label="Новое место для формата"></button></div>
+          <div class="tog"><span>В макетах есть тексты</span><button class="sw" role="switch" aria-checked="false" data-k="texts" aria-label="Тексты"></button></div>
+          <div class="tog"><span>Не уверена, что задуманный визуал получится в креативах</span><button class="sw" role="switch" aria-checked="false" data-k="visual" aria-label="Сомнения в визуале"></button></div>
+        </div>
+        <div><button class="tplbtn" id="revDod"><svg class="lu" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/><path d="M13 6h8"/><path d="M13 12h8"/><path d="M13 18h8"/></svg><span>Посмотреть чек-листы AdTech</span></button></div>
+      </div>
+      <div class="card">
+        <h3>Кто смотрит</h3>
+        <div class="sub" id="revCount"></div>
+        <div class="rlist" id="rlist"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEAMS -->
+  <section class="section" id="seams">
+    <h2 class="sec">3. Стыки со смежниками</h2>
+    <p class="hint">Описываем <mark>только зону передачи</mark>: что даём, что получаем обратно, когда и куда задавать вопросы. Внутренние процессы других команд — их зона.</p>
+    <div class="seams" id="seamGrid"></div>
+  </section>
+
+  <!-- PROBLEMS -->
+  <section class="section" id="problems">
+    <h2 class="sec">4. Проблемы</h2>
+    <p class="hint">Сквозные проблемы и <mark>что предлагаем</mark>.</p>
+    <div class="plist" id="plist"></div>
+  </section>
+
+  <!-- OUTSIDE -->
+  <section class="section" id="outside">
+    <h2 class="sec">5. За рамками дизайна</h2>
+    <p class="hint">Эти вопросы всплыли при разборе, но решаются не дизайном. Предлагаем взять их <mark>в общий процесс AdTech</mark>.</p>
+    <table>
+      <thead><tr><th>Вопрос</th><th>Предложение</th><th>Чья зона</th></tr></thead>
+      <tbody id="outBody"></tbody>
+    </table>
+  </section>
+
+  <div class="foot">
+    <b>Что описываем:</b> дизайн-процесс формата и точки передачи смежникам. <b>Не описываем:</b> внутренние процессы других команд, сроки и приоритеты (продакт, общий процесс AdTech), процесс A/B-тестов (у аналитиков — «A/B-тесты в AdTech»).<br>
+    <b>Дальше по приоритету:</b> 1) чек-лист AdTech (DoD) для мобилки и веба; 2) формат общего гайда и мини-гайда → скилл; 3) шаблон гайда для нового компонента в готовом формате → скилл.
+  </div>
+</div>
+
+<dialog id="tplModal" aria-labelledby="tplTitle">
+  <div class="mh">
+    <h3 id="tplTitle">Шаблон задачи<small>стандартный шаблон + блок для AdTech</small></h3>
+    <button class="mx" data-close aria-label="Закрыть"><svg class="lu" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+  </div>
+  <div class="mb">
+<pre class="tpl" id="tplStd"></pre>
+    <div class="newblk">
+      <span class="lbl">Предложение к добавлению</span>
+<pre class="tpl" id="tplAd"></pre>
+    </div>
+  </div>
+  <div class="mf">
+    <button class="btn" id="copyStd"><svg class="lu" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span>Скопировать без блока AdTech</span></button>
+    <button class="btn dark" id="copyAll"><svg class="lu" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span>Скопировать всё</span></button>
+  </div>
+</dialog>
+
+<dialog id="dodModal" aria-labelledby="dodTitle">
+  <div class="mh">
+    <h3 id="dodTitle">Чек-листы AdTech<small>для продуктового дизайнера AdTech · черновик</small></h3>
+    <button class="mx" data-close aria-label="Закрыть"><svg class="lu" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button>
+  </div>
+  <div class="dctl">
+    <div class="dtabs" id="dodTab">
+      <button aria-pressed="true" data-v="dod">DoD — кому показать</button>
+      <button aria-pressed="false" data-v="todo">Не забыть — что сделать</button>
+    </div>
+    <div class="drow">
+      <div class="seg" id="dodPlat">
+        <button aria-pressed="true" data-v="mob">Мобильное приложение</button>
+        <button aria-pressed="false" data-v="web">Веб</button>
+      </div>
+      <div class="seg" id="dodType">
+        <button aria-pressed="true" data-v="A">Новый формат</button>
+        <button aria-pressed="false" data-v="A1">Доработка формата</button>
+      </div>
+    </div>
+    <div class="dtogs" id="dodTogs"></div>
+  </div>
+  <div class="mb">
+    <div class="dgroups" id="dodGroups"></div>
+    <div class="dprop" id="dodProp">
+      <span class="lbl">Предложение к добавлению в общий DoD</span>
+      <p>Для дизайнеров других команд, которые встраивают рекламный формат к себе. Блок «Перед передачей в разработку».</p>
+      <div class="di"><span>Встраивание рекламы согласовать с дизайнером AdTech<span class="req">*</span> <span class="where">[чат]</span></span></div>
+      <div class="di"><span>Ссылка на готовый макет с рекламным форматом передана дизайнеру AdTech<span class="req">*</span></span></div>
+    </div>
+  </div>
+  <div class="mf">
+    <button class="btn" id="dodReset"><svg class="lu" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg><span>Сбросить отметки</span></button>
+    <button class="btn dark" id="dodCopy"><svg class="lu" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg><span>Скопировать для Jira</span></button>
+  </div>
+</dialog>
+
+<script>
+const ICON = {"checkSm": `<svg class="lu" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>`, "list": `<svg class="lu" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/><path d="M13 6h8"/><path d="M13 12h8"/><path d="M13 18h8"/></svg>`, "rule": `<svg class="lu" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>`, "file": `<svg class="lu" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 9H8"/><path d="M16 13H8"/><path d="M16 17H8"/></svg>`, "undo": `<svg class="lu" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11"/></svg>`, "info": `<svg class="lu" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>`, "check": `<svg class="lu" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>`};
+const TPL_STD = `*Проблема*
+Какая боль пользователя или бизнеса решается?
+
+*Задача*
+Желаемый пользовательский сценарий, без привязки к конкретному решению.
+
+*Критерии успеха*
+Какие метрики хотим вырастить?
+
+*Дополнительные материалы*
+Что уже есть: наработки флоу, референсы, данные, исследования.
+
+*Наработки:* [ссылка на Figma]
+Текущие данные: [ссылка на дашборд аналитики]`;
+const TPL_AD = `*Для AdTech*
+Тип: новый формат / доработка формата / встраивание на страницу другой команды
+Площадки: мобилка / веб
+Дата запуска: [дата или «пока нет»]
+Тест: нет / да → гипотеза, варианты, метрика, даты, [карточка эксперимента]
+Смежники: коммуникационные дизайнеры / дизайнер админки / команда страницы [какая]`;
+
+const ROLES = [
+  {id:'prod', name:'Продакт', sh:'c', col:'var(--olive)'},
+  {id:'des',  name:'Продуктовый дизайнер', sh:'', col:'var(--crimson)'},
+  {id:'kso',  name:'Коммуникационные дизайнеры', sh:'d', col:'#F08A2C'},
+  {id:'admin',name:'Дизайнер админки', sh:'t', col:'var(--red)'},
+  {id:'dev',  name:'Разработка и QA', sh:'c', col:'var(--pink)'},
+  {id:'page', name:'Команды страниц', sh:'', col:'var(--olive)'},
+  {id:'an',   name:'Аналитики', sh:'d', col:'var(--crimson)'}
+];
+const ART_A = ['задача описана по шаблону','макеты показаны на синке и лиду','«ок» по чек-листу AdTech','готовый гайд для передачи','задачи поставлены, макеты показаны разработке','тестовая сборка готова','«ок» дизайнера','формат проверен с креативами','формат запущен к дате','итоги теста у дизайнера'];
+const ART_B2 = ['формат выбран по гайду','«ок» дизайнера AdTech','ссылка на макет в гайде','запуск по процессу команды'];
+
+const STAGES_A = [
+  {n:0, t:'Задача', lead:'Продакт', roles:['prod','des','an'],
+   in:['Идея, цель'],
+   out:['Задача в Jira по шаблону + блок «Для AdTech»: тип, площадки, дата запуска (или «пока нет»), смежники','Если тест — пометка «тест» и данные теста: гипотеза, варианты, метрика, даты, карточка эксперимента'],
+   rule:'Задача описана полностью и по шаблону и предварительно обсуждена с дизайнером до четверга 2-й недели спринта',
+   pain:'Задача не всегда описана полностью и по шаблону — тогда детали уточняем на созвонах уже во время проектирования. Дата запуска известна не всегда.'},
+  {n:1, t:'Проектирование', lead:'Продуктовый дизайнер', roles:['des'],
+   in:['Задача'], out:['Макеты показаны на синке дизайнеров и лиду'],
+   rule:'Синк не нужен для мелких доработок и гайдов', pain:''},
+  {n:2, t:'Ревью', lead:'Продуктовый дизайнер', roles:['des'],
+   in:['Макеты'], out:['«Ок» лида и тех, кто нужен по чек-листу AdTech'],
+   rule:'Показываю нужные по задаче пункты чек-листа. Лид — тоже ревью. Кто ещё — во вкладке «Ревью»',
+   pain:'Общий DoD не подходит рекламе: нет пунктов про размеры, безопасную зону, маркировку, веб.'},
+  {n:3, t:'Гайд', lead:'Продуктовый дизайнер', roles:['des'],
+   in:['Согласованные макеты'], out:['Гайд или мини-гайд по шаблону; для доработки — модуль нового компонента в гайде формата (например, тип карточки в витрине)','Блок «Что загружать»: размер загрузки и множитель (x2 или x4)'],
+   rule:'Гайд — единственный источник размеров. Чего нет в гайде, то не договорённость',
+   pain:'Состав гайда каждый раз разный, мини-гайда для тестов нет. Не знают, что размер берётся из гайда. Коммуникационные дизайнеры путают размер на сайте и размер загрузки.'},
+  {n:4, t:'Задачи смежникам', lead:'Дизайнер пишет · продакт ставит сроки', roles:['des','prod','kso','admin','dev'],
+   in:['Гайд'], out:['Задача коммуникационным дизайнерам (опционально): гайд для поставщиков и тестовые креативы','Задача дизайнеру админки (опционально)','Макеты показаны разработке','Задачи на разработку ставит продакт','Все задачи связаны в Jira с исходной'],
+   rule:'Время на эти задачи закладываем в спринт отдельной задачей',
+   pain:'Размеры расходятся. Ссылку на гайд коммуникационных дизайнеров не возвращают. В задаче админке слепые зоны. Задачи не связаны.'},
+  {n:5, t:'Разработка', lead:'Продакт', roles:['dev','prod','des'],
+   in:['Задачи разработке'], out:['Тестовая сборка'],
+   rule:'Вопросы по дизайну — в общем канале, не в личке',
+   pain:'Демо разработке проводим не всегда.'},
+  {n:6, t:'Дизайн-приёмка', lead:'Дизайнер + QA', roles:['des','dev'],
+   in:['Тестовая сборка'], out:['Баги в Jira','«Ок» дизайнера'],
+   rule:'Формат закрыт после приёмки, а не после передачи гайда',
+   pain:'В приложении приёмка проходит не всегда. На вебе результат с дизайном пока не сверяют вообще.'},
+  {n:7, t:'Тест на устройствах', lead:'QA', roles:['dev','kso','des','admin'],
+   in:['Задача на тестирование — ставит продакт','Коммуникационные дизайнеры передали креативы тестировщикам для загрузки'], out:['Формат проверен с креативами на устройствах','Итог тестирования видит продуктовый дизайнер'],
+   rule:'Доработки по формату → продуктовому дизайнеру. По креативам → коммуникационным дизайнерам',
+   pain:'Как формат выглядит с реальными креативами, проверяем уже по факту.'},
+  {n:8, t:'Запуск', lead:'Продакт', roles:['prod'],
+   in:['Тест пройден'], out:['Формат запущен к дате'],
+   rule:'Дата запуска одна и живёт в эпике. О сдвиге — сообщение в канал',
+   pain:'Дату знает не каждый, сдвиги не видны.'},
+  {n:9, t:'После запуска', lead:'Дизайнер (гайд) · продакт (аналитика)', roles:['des','prod','kso','an'],
+   in:['Формат работает'], out:['Правки внесены в гайд, если были','Ссылка на гайд коммуникационных дизайнеров добавлена в гайд формата','Задачу на аналитику ставит продакт','Если был тест — результаты переданы дизайнеру'],
+   rule:'Коммуникационные дизайнеры возвращают ссылку на свой гайд обязательно',
+   pain:'Правки в гайд не возвращаются. О результатах теста дизайн узнаёт поздно.'}
+];
+
+const STAGES_B2 = [
+  {n:1, t:'Выбор формата', lead:'Команда страницы', roles:['page'],
+   in:['Команда хочет рекламу на своей странице'], out:['Формат выбран по гайдам AdTech'],
+   rule:'Формат — зона AdTech. Свои размеры не придумываем', pain:'Команды ставят рекламу без согласования, иногда со своими размерами.'},
+  {n:2, t:'Ревью у AdTech', lead:'Продуктовый дизайнер AdTech', roles:['page','des'],
+   in:['Макет страницы с нашим форматом'], out:['«Ок» дизайнера AdTech'],
+   rule:'Пункт в их чек-листе (через команду ДС): «Встраивание рекламы согласовать с дизайнером AdTech»', pain:''},
+  {n:3, t:'Ссылка на макет', lead:'Команда страницы', roles:['page','des'],
+   in:['Согласованный макет'], out:['Ссылка на готовый макет со встроенным форматом'],
+   rule:'Пункт в их чек-листе (через команду ДС): «Ссылка на готовый макет с рекламным форматом передана дизайнеру AdTech»', pain:'Ссылок на страницы, где стоит формат, у нас нет.'},
+  {n:4, t:'Их процесс', lead:'Команда страницы', roles:['page','dev'],
+   in:['«Ок» от дизайнера AdTech','Готовые макеты'], out:['Разработка, тест и запуск — по процессу их команды'],
+   rule:'Вопросы по формату — продуктовому дизайнеру AdTech или в общий канал', pain:''}
+];
+
+const REVIEW = [
+  {id:'lead', name:'Дизайн-лид', d:'Всегда — это тоже ревью.', test:()=>[true,'всегда']},
+  {id:'sync', name:'Синк дизайнеров', d:'Почти всегда.', test:s=> s.type==='new'?[true,'новый формат']:[false, s.type==='guide'?'не нужен для гайдов':'не нужен для мелких доработок']},
+  {id:'ds', name:'Дизайн-система', d:'Почти всегда: рекламные компоненты собраны из компонентов дизайн-системы. Гайды тоже показываю.', test:()=>[true,'почти всегда']},
+  {id:'cje', name:'CJE', d:'Новый формат или встраивание в новое место.', test:s=> s.type==='guide'?[false,'не нужен для гайдов']:(s.type==='new'||s.embed)?[true, s.type==='new'?'новый формат':'новое место']:[false,'мелкая доработка вне пути пользователя']},
+  {id:'plat', name:'Платформа', d:'Встраиваемся в каталог, поиск, опросы и отзывы, постчекаут, финтех, чекаут, корзину или на страницу другой команды.', test:s=> s.embed?[true,'новое место']:[false,'место не новое']},
+  {id:'ed', name:'Редактор', d:'Если в макетах есть тексты.', test:s=> s.texts?[true,'есть тексты']:[false,'текстов нет']},
+  {id:'kso', name:'Лид коммуникационных дизайнеров', d:'По ситуации, в основном для нового формата: получится ли задуманный визуал, примерить креативы.', test:s=> (s.visual || (s.type==='new' && s.visual))?[true,'проверить визуал']:[false, s.type==='new'?'по ситуации':'не нужно']}
+];
+
+const SEAMS = [
+  {t:'Коммуникационные дизайнеры', s:'креативы и гайд для поставщиков',
+   give:'Гайд: размер загрузки в админке, безопасная зона',
+   get:'Тестовые креативы и ссылку на их гайд',
+   when:'После гайда, этап 4',
+   form:'Задача в Jira, связанная с исходной',
+   q:'Общий канал дизайна AdTech'},
+  {t:'Дизайнер админки', s:'рекламная платформа',
+   give:'Задачу с описанием контент-ролей, параметрами и лимитами',
+   get:'Макет админки на ревью',
+   when:'После гайда, этап 4',
+   form:'Задача в Jira, связанная с исходной',
+   q:'Общий канал дизайна AdTech'},
+  {t:'Разработка и QA', s:'мобильное приложение и веб',
+   give:'Показ макетов и гайд',
+   get:'Тестовую сборку на приёмку и итог теста на устройствах',
+   when:'Показ — до разработки, приёмка — после сборки, тест — перед запуском',
+   form:'Баги в Jira',
+   q:'Общий канал дизайна AdTech'},
+  {t:'Команды страниц', s:'тип B — берут наш формат',
+   give:'Гайды форматов',
+   get:'Макет на ревью и ссылку на готовый макет',
+   when:'До начала их дизайна',
+   form:'Пункты в их DoD через команду ДС',
+   q:'Дизайнеру AdTech или в общий канал'},
+  {t:'Аналитики', s:'A/B-тесты',
+   give:'Макеты всех вариантов теста',
+   get:'Данные теста в задаче и итоги после теста',
+   when:'Макеты — до этапа «Подготовка» у аналитиков',
+   form:'Поле «Макеты» в карточке эксперимента (предложение)',
+   q:'Канал «AB тесты AdTech»'}
+];
+const PROBLEMS = [
+  {b:'Не знают, что размер берётся из гайда', p:'Спрашивают, почему под плейсмент такой размер.', f:'Размеры только из гайдов, новый размер — через продуктового дизайнера'},
+  {b:'Размер загрузки без единой логики', p:'Делали то x2, то x4.', f:'Множитель указывает продуктовый дизайнер в гайде'},
+  {b:'Коммуникационные дизайнеры путают размер на сайте и размер загрузки', p:'Берут размер с мастер-компонента.', f:'Блок «Что загружать» в шаблоне гайда'},
+  {b:'Задачи не связаны', p:'Не видно, что от чего зависит.', f:'Все задачи связаны в Jira с исходной'},
+  {b:'Встраивание без AdTech', p:'Команды ставят рекламу к себе без согласования.', f:'Пункты в их DoD через команду ДС'},
+  {b:'Стыки с командами страниц', p:'Требования дизайна не попадают в их задачи.', f:'Ревью у дизайнера AdTech и ссылка на готовый макет'},
+  {b:'Веб', p:'Переезд на MADS, часть рекламы не под AdTech, приёмки нет.', f:'Отдельный раздел после приложения'}
+];
+
+const OUTSIDE = [
+  ['Задача по шаблону','Продакт заводит задачу по шаблону Jira с блоком «Для AdTech»: тип, площадки, дата запуска (или «пока нет»), тест и его данные, смежники. Важно, чтобы задача была описана полностью','Продакт','y'],
+  ['Связи задач','Задачи смежников связаны с задачей на формат: «зависит от»','Продакт + дизайн','g'],
+  ['Дата запуска','Одна дата в эпике Jira; о сдвиге — сообщение в канал','Продакт','y'],
+  ['Смена размеров','План перехода: с какой даты новые размеры, к какой дате готовы креативы, до какой крутятся старые (их уже купили поставщики)','Продакт','y'],
+  ['Размеры в задачах','Размеры только из гайдов; новый размер — через продуктового дизайнера','Продакт + дизайн','g'],
+  ['Встраивание без AdTech','Правило для команд страниц (тип B)','Общий процесс',''],
+  ['Доступ к аналитике','Где смотреть данные по формату','Продакт, аналитики','y'],
+  ['Веб и MADS','Какая реклама наша, когда переезд, как вводим ревью разработки и приёмку','Продакт','y']
+];
+
+/* ---------- state ---------- */
+const st = {type:'A', stage:0, role:null};
+const $ = id => document.getElementById(id);
+const esc = s => s.replace(/[&<>]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const plus = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="6.5"/><path d="M8 5v6M5 8h6"/></svg>';
+const stages = () => st.type==='B2' ? STAGES_B2 : STAGES_A;
+
+/* tabs */
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.setAttribute('aria-selected', x===t));
+  document.querySelectorAll('.section').forEach(s=>s.classList.toggle('on', s.id===t.dataset.tab));
+});
+
+/* role chips */
+$('roleChips').innerHTML = ROLES.map(r=>`<button class="chip" aria-pressed="false" data-role="${r.id}"><span class="shape ${r.sh}" style="background:${r.col}"></span>${r.name}</button>`).join('');
+$('roleChips').onclick = e=>{
+  const b = e.target.closest('.chip'); if(!b) return;
+  st.role = st.role===b.dataset.role ? null : b.dataset.role;
+  const list = stages(), first = list.findIndex(s=>s.roles.includes(st.role));
+  if(st.role && first>=0 && !list[st.stage].roles.includes(st.role)) st.stage = first;
+  render();
+};
+$('typeSeg').onclick = e=>{
+  const b = e.target.closest('button'); if(!b) return;
+  st.type = b.dataset.type; st.stage = 0; render();
+};
+$('prev').onclick = ()=>{ if(st.stage>0){st.stage--; render();} };
+$('next').onclick = ()=>{ if(st.stage<stages().length-1){st.stage++; render();} };
+
+function render(){
+  const list = stages(), s = list[st.stage];
+  document.querySelectorAll('#typeSeg button').forEach(b=>b.setAttribute('aria-pressed', b.dataset.type===st.type));
+  document.querySelectorAll('#roleChips .chip').forEach(b=>b.setAttribute('aria-pressed', b.dataset.role===st.role));
+  $('stageHint').innerHTML = st.type==='B2'
+    ? 'Тип B: <mark>другая команда берёт наш формат</mark> к себе.<br>Свой короткий путь — дальше их процесс.'
+    : 'Новый формат и доработка проходят <mark>одни и те же этапы</mark>.<br>Нажмите на роль — <mark>подсветятся этапы</mark>, где она участвует.<br>Нажмите на этап на схеме — ниже откроются детали.';
+
+  $('yTitle').innerHTML = `${esc(s.t)}<small>${st.type==='B2'?'путь B':'этап'} ${st.type==='B2'?s.n+' из '+list.length:''}</small>`;
+  $('yNum').textContent = String(s.n).padStart(2,'0');
+  $('yLead').textContent = s.lead;
+  $('yRoles').innerHTML = ROLES.filter(r=>s.roles.includes(r.id)).map(r=>`<span class="role ${r.id===st.role?'on':''}">${r.name}</span>`).join('');
+  $('yLines').innerHTML = ROLES.map(r=>{
+    const c = list.filter(x=>x.roles.includes(r.id)).length;
+    const h = 20 + Math.round(c/list.length*85);
+    return `<span class="ln ${s.roles.includes(r.id)?'':'dim'}" style="height:${h}px" title="${r.name}: ${c} из ${list.length}"></span>`;
+  }).join('');
+  $('yCount').textContent = `${s.roles.length} из ${ROLES.length} ролей`;
+
+  $('pTitle').innerHTML = `${esc(s.t)}<small>что на входе и на выходе</small>`;
+  const outs = s.out;
+  const track = w=>`<div class="track"><i style="width:${w}%"></i><em></em><s></s></div>`;
+  $('pCols').innerHTML = `
+    <div class="blk"><h3>На входе</h3>${track(30)}<ul>${s.in.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
+    <div class="blk"><h3>На выходе</h3>${track(70)}<ul>${outs.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>${st.type!=='B2'&&s.n===0?'<button class="tplbtn" data-tpl>'+ICON.file+'<span>Посмотреть шаблон</span></button>':''}${s.n===2&&st.type!=='B2'?'<button class="tplbtn" data-dod="'+st.type+'">'+ICON.list+'<span>Посмотреть чек-листы AdTech</span></button>':''}</div>
+    <div class="rule"><span class="rlbl">Правило</span><p>${esc(s.rule)}</p><span class="tag">ведёт: ${esc(s.lead)}</span></div>
+    ${s.pain?`<div class="blk pain"><h3>Что мешает сейчас</h3><p>${esc(s.pain)}</p></div>`:''}`;
+  $('prev').disabled = st.stage===0; $('next').disabled = st.stage===list.length-1;
+
+  const ART = st.type==='B2' ? ART_B2 : ART_A;
+  const cols = Math.min(5, list.length);
+  $('strip').className = 'flow' + (cols===5 ? ' c5' : '');
+  $('strip').style.gridTemplateColumns = `repeat(${cols},1fr)`;
+  $('loopNote').innerHTML = st.type==='B2' ? '' : ICON.undo + '<span>Доработки после дизайн-приёмки (6) и теста на устройствах (7) возвращаются к макетам и гайду (3)</span>';
+  $('strip').innerHTML = list.map((x,i)=>{
+    const has = !st.role || x.roles.includes(st.role);
+    return `<div class="node ${has?'':'dim'} ${st.role&&has?'hl':''}"><button class="pillx" aria-current="${i===st.stage}" data-i="${i}"><span class="no">${x.n}</span>${esc(x.t).replace(/-/g,'\u2011')}</button><span class="art">${ART[i]||''}</span></div>`;
+  }).join('');
+}
+$('strip').onclick = e=>{ const b=e.target.closest('.pillx'); if(!b) return; st.stage=+b.dataset.i; render(); };
+
+/* review */
+const rv = {type:'new', embed:false, newplace:false, texts:false, visual:false};
+$('revType').onclick = e=>{ const b=e.target.closest('button'); if(!b) return; rv.type=b.dataset.v; renderRev(); };
+document.querySelectorAll('.sw').forEach(s=>s.onclick=()=>{ rv[s.dataset.k]=!rv[s.dataset.k]; renderRev(); });
+function renderRev(){
+  document.querySelectorAll('#revType button').forEach(b=>b.setAttribute('aria-pressed', b.dataset.v===rv.type));
+  document.querySelectorAll('.sw').forEach(s=>s.setAttribute('aria-checked', rv[s.dataset.k]));
+  let n=0;
+  $('rlist').innerHTML = REVIEW.map(r=>{
+    const [on,why] = r.test(rv); if(on) n++;
+    return `<div class="ritem ${on?'':'off'}"><span class="ck">${ICON.check}</span><div><b>${r.name}</b><p>${r.d}</p><span class="why">${on?'нужен — ':''}${why}</span></div></div>`;
+  }).join('');
+  $('revCount').textContent = `${n} из ${REVIEW.length} ревью для этой задачи`;
+}
+
+/* seams */
+$('seamGrid').innerHTML = SEAMS.map(s=>`
+  <div class="seam">
+    <h3>${s.t}</h3><div class="sub">${s.s}</div>
+    ${[['Даём',s.give],['Получаем',s.get],['Когда',s.when],['В каком виде',s.form],['Куда вопросы',s.q]].map(([l,v])=>`<div class="f"><span>${l}</span><p>${v}</p></div>`).join('')}
+  </div>`).join('');
+
+/* problems */
+$('plist').innerHTML = PROBLEMS.map((p,i)=>`<div class="prob"><div class="ph"><span class="i">${String(i+1).padStart(2,'0')}</span><b>${p.b}</b></div><p>${p.p}</p><div class="fix">${p.f}</div></div>`).join('');
+
+/* outside */
+$('outBody').innerHTML = OUTSIDE.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td><span class="pill ${r[3]}">${r[2]}</span></td></tr>`).join('');
+
+/* template modal */
+const md = $('tplModal');
+const jiraHtml = t => esc(t).replace(/\*([^*\n]+)\*/g, '<b>$1</b>');
+$('tplStd').innerHTML = jiraHtml(TPL_STD);
+$('tplAd').innerHTML = jiraHtml(TPL_AD);
+$('pCols').addEventListener('click', e=>{ if(e.target.closest('[data-tpl]')) md.showModal(); const d=e.target.closest('[data-dod]'); if(d) openDod(d.dataset.dod); });
+md.addEventListener('click', e=>{ if(e.target===md || e.target.closest('[data-close]')) md.close(); });
+async function copy(text, btn){
+  const lbl = btn.querySelector('span'), old = lbl.textContent;
+  try{ await navigator.clipboard.writeText(text); }
+  catch(_){
+    const ta = document.createElement('textarea'); ta.value = text; md.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); }catch(_){}
+    ta.remove();
+  }
+  lbl.textContent = 'Скопировано';
+  setTimeout(()=>lbl.textContent = old, 1600);
+}
+$('copyAll').onclick = e=>copy(TPL_STD + '\n\n' + TPL_AD, e.currentTarget);
+$('copyStd').onclick = e=>copy(TPL_STD, e.currentTarget);
+
+/* typography: no hanging short words */
+const SHORT = /(^|[\s («"/])(в|во|с|со|к|ко|о|об|обо|у|и|а|я|на|по|до|за|из|от|не|ни|но|для|без|под|при|про|над|как|что|или|же|ли|то|её|их|чек|А|A|B|C)\s+/gi;
+function typo(root){
+  const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {acceptNode:n=>/^(SCRIPT|STYLE|TEXTAREA)$/.test(n.parentNode.nodeName)?2:1});
+  let n; while((n = w.nextNode())){
+    let t = n.nodeValue, prev;
+    do{ prev = t; t = t.replace(SHORT, '$1$2 '); }while(t !== prev);
+    t = t.replace(/\s+(—|–)\s/g, ' $1 ').replace(/(\d)\s+(px|из|×)/g,'$1 $2').replace(/(×)\s+(\d)/g,'$1 $2');
+    if(t !== n.nodeValue) n.nodeValue = t;
+  }
+}
+const _render = render, _renderRev = renderRev;
+render = function(){ _render(); typo(document.getElementById('stages')); };
+renderRev = function(){ _renderRev(); typo(document.getElementById('review')); };
+
+/* ---------- DoD AdTech ---------- */
+const any = (...t)=>s=>t.includes(s.type);
+const always = ()=>true;
+const DOD_TOGS = {
+  dod:  [{k:'place', t:'Новое место для формата'},
+         {k:'texts', t:'Есть тексты'},
+         {k:'ds',    t:'Нужен новый или изменённый компонент ДС'}],
+  dodWeb: [{k:'prod', t:'Затрагивает продуктовую часть'}],
+  todo: [{k:'test',  t:'Это тест'}]
+};
+const LISTS = {
+  dod: [
+    {g:'До начала работы', items:[
+      {id:'sprint', t:'Отправка в чат-ревью / показ задач на спринт', req:1, show:always}
+    ]},
+    {g:'В процессе работы', items:[
+      {id:'research', t:'Задача на исследователя', note:'опционально, если есть гипотеза', show:always},
+      {id:'kso', t:'Сверка с лидом коммуникационных дизайнеров', note:'опционально', show:any('A')},
+      {id:'platShow', t:'Показать дизайнеру Платформы', show:s=>s.place},
+      {id:'editorTask', t:'Поставить задачу редактору', show:s=>s.texts},
+      {id:'dsWork', t:'Сходить за доработкой ДС или паттерна', show:s=>s.ds},
+      {id:'leadMid', t:'Показать лиду промежуточный вариант', show:always},
+      {id:'sync', t:'Показать на синке дизайнеров', req:1, show:any('A')}
+    ]},
+    {g:'Близкое к финалу решение', items:[
+      {id:'cje', t:'Ревью CJE', where:'[чат]', note:'опционально', show:always},
+      {id:'lead', t:'Ревью дизайн-лида', where:'[лично]', req:1, show:always},
+      {id:'fmtDes', t:'Обсудить с дизайнером формата', show:s=>s.place}
+    ]},
+    {g:'Перед передачей в разработку', items:[
+      {id:'dsRev', t:'Ревью ДС', where:'[чат]', req:1, show:always},
+      {id:'edRev', t:'Ревью редактора', where:'[чат]', req:1, show:s=>s.texts},
+      {id:'platRev', t:'Ревью Платформы', where:'[чат]', req:1, show:s=>s.place},
+      {id:'icons', t:'Ревью Icons / Illustrations', where:'[чат]', note:'опционально', show:always}
+    ]},
+    {g:'После разработки', items:[
+      {id:'adminTask', t:'Поставить задачу дизайнеру админки', note:'опционально', show:always},
+      {id:'ksoTask', t:'Поставить задачу коммуникационным дизайнерам', note:'опционально', show:always}
+    ]}
+  ],
+  dodWeb: [
+    {g:'В процессе работы', items:[
+      {id:'w_webDes', t:'Обсудить с дизайнером веба', req:1, show:s=>s.prod},
+      {id:'w_kso', t:'Сверка с лидом коммуникационных дизайнеров', note:'опционально', show:any('A')},
+      {id:'w_ds', t:'Сходить за доработкой ДС или паттерна', note:'при необходимости', show:always}
+    ]},
+    {g:'Перед передачей в разработку', items:[
+      {id:'w_lead', t:'Ревью дизайн-лида', where:'[лично]', req:1, show:always},
+      {id:'w_dsRev', t:'Ревью ДС', where:'[чат]', req:1, show:always},
+      {id:'w_icons', t:'Ревью Icons / Illustrations', where:'[чат]', note:'при необходимости', show:always}
+    ]},
+    {g:'После разработки', items:[
+      {id:'w_adminTask', t:'Поставить задачу дизайнеру админки', note:'опционально', show:always},
+      {id:'w_ksoTask', t:'Поставить задачу коммуникационным дизайнерам', note:'опционально', show:always}
+    ]}
+  ],
+  todo: [
+    {g:'Макеты', items:[
+      {id:'sizes', t:'Размеры проверены на всех экранах', show:always},
+      {id:'safe', t:'Безопасная зона и зона маркировки «Реклама» заданы', show:always},
+      {id:'webbp', t:'Брейкпоинты проверены', show:s=>s.plat==='web'},
+      {id:'variants', t:'Макеты всех вариантов теста готовы и подписаны', show:s=>s.test}
+    ]},
+    {g:'Гайд', items:[
+      {id:'guide', t:'Гайд или мини-гайд по шаблону', show:always},
+      {id:'upload', t:'Блок «Что загружать»: размер загрузки и множитель', show:always},
+      {id:'states', t:'Состояния формата: загрузка, нет креатива, ошибка', show:any('A')}
+    ]},
+    {g:'Передача', items:[
+      {id:'demo', t:'Макеты показаны разработке', show:any('A')}
+    ]}
+  ]
+};
+const dod = {tab:'dod', type:'A', plat:'mob', prod:false, embed:false, place:false, texts:false, ds:false, test:false, done:{}};
+const press = (sel, v)=>document.querySelectorAll(sel+' button').forEach(b=>b.setAttribute('aria-pressed', b.dataset.v===v));
+const listKey = ()=> dod.tab==='dod' && dod.plat==='web' ? 'dodWeb' : dod.tab;
+function renderDod(){
+  press('#dodTab', dod.tab); press('#dodType', dod.type); press('#dodPlat', dod.plat);
+  const key = listKey();
+  $('dodProp').style.display = dod.tab==='dod' ? '' : 'none';
+  $('dodTogs').innerHTML = DOD_TOGS[key].filter(t=>!t.only || t.only===dod.type)
+    .map(t=>`<button class="dt" aria-pressed="${dod[t.k]}" data-k="${t.k}"><span class="bx">${dod[t.k]?ICON.checkSm:''}</span>${t.t}</button>`).join('');
+  let need=0, got=0;
+  $('dodGroups').innerHTML = LISTS[key].map(g=>{
+    const items = g.items.filter(it=>it.show(dod));
+    if(!items.length) return '';
+    return `<div class="dg"><h4>${g.g}</h4>${items.map(it=>{
+      const r = dod.tab==='dod' ? !!it.req : true, on = !!dod.done[it.id];
+      if(r){ need++; if(on) got++; }
+      return `<label class="di ${on?'done':''}"><span>${it.t}${dod.tab==='dod'&&it.req?'<span class="req">*</span>':''}${it.where?` <span class="where">${it.where}</span>`:''}${it.note?`<small>${it.note}</small>`:''}</span><input type="checkbox" data-id="${it.id}" ${on?'checked':''}></label>`;
+    }).join('')}</div>`;
+  }).join('') + `<div class="dstatus"><b>${dod.tab==='dod'?'Готовность к разработке':'Всё на месте'}</b><span class="spill ${need&&got===need?'ok':''}">${need&&got===need?(dod.tab==='dod'?'готово к разработке':'готово'):`${dod.tab==='dod'?'в работе у дизайнера · ':''}${got} из ${need}`}</span></div>`;
+  typo($('dodModal'));
+}
+function openDod(type){ dod.type = type==='A1'?'A1':'A'; renderDod(); $('dodModal').showModal(); }
+$('dodTab').onclick = e=>{ const b=e.target.closest('button'); if(!b) return; dod.tab=b.dataset.v; renderDod(); };
+$('dodType').onclick = e=>{ const b=e.target.closest('button'); if(!b) return; dod.type=b.dataset.v; renderDod(); };
+$('dodPlat').onclick = e=>{ const b=e.target.closest('button'); if(!b) return; dod.plat=b.dataset.v; renderDod(); };
+$('dodTogs').onclick = e=>{ const b=e.target.closest('.dt'); if(!b) return; dod[b.dataset.k]=!dod[b.dataset.k]; renderDod(); };
+$('dodGroups').onchange = e=>{ const c=e.target.closest('input[data-id]'); if(!c) return; dod.done[c.dataset.id]=c.checked; renderDod(); };
+$('dodReset').onclick = ()=>{ dod.done={}; renderDod(); };
+$('dodCopy').onclick = e=>{
+  const lines=[];
+  LISTS[listKey()].forEach(g=>{ const items=g.items.filter(it=>it.show(dod)); if(!items.length) return;
+    lines.push(`*${g.g}*`); items.forEach(it=>lines.push(`* ${it.t}${dod.tab==='dod'&&it.req?' (обязательно)':''}${it.where?' '+it.where:''}`)); lines.push(''); });
+  copy(lines.join('\n').trim(), e.currentTarget);
+};
+$('dodModal').addEventListener('click', e=>{ if(e.target===$('dodModal') || e.target.closest('[data-close]')) $('dodModal').close(); });
+$('revDod').onclick = ()=>openDod(rv.type==='small'?'A1':'A');
+
+render(); renderRev(); typo(document.body);
+</script>
+</body>
+</html>

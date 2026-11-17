@@ -322,6 +322,23 @@ dialog::backdrop{background:rgba(20,20,22,.45); backdrop-filter:blur(2px)}
   .art{padding:0}
   .sec{font-size:24px}
   .pinkc{padding:24px 20px}
+  .nav{position:static; margin-top:24px}
+  .nav button{flex:1; width:auto}
+  .tplbtn,.themebtn{display:flex; width:100%; justify-content:center}
+  .top{flex-direction:column; align-items:stretch; gap:8px}
+  .themebtn{order:-1}
+  .seg,.ctl .seg,.dtabs{display:grid; grid-auto-flow:column; grid-auto-columns:1fr; width:100%}
+  .seg button,.dtabs button{white-space:normal; text-align:center}
+  .drow{align-items:stretch}
+  .mf .btn{flex:1 1 100%; justify-content:center}
+  .tabs{display:grid; grid-template-columns:1fr 1fr; width:100%}
+  .tabs .tab:last-child{grid-column:1/-1}
+  .chips{display:grid; grid-template-columns:1fr; width:100%}
+  .chip{width:100%}
+  .dt{width:100%}
+  #dodModal[open]{display:block; overflow:auto}
+  #dodModal .mb,#tplModal .mb{max-height:none; overflow:visible}
+  #tplModal[open]{overflow:auto; max-height:92vh}
   .tab{padding:12px 14px; font-size:14px}
   .give{grid-template-columns:1fr}
   .grid,.plist{grid-template-columns:1fr}
